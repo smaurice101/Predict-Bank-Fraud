@@ -27,7 +27,7 @@ hpdehost="http://127.0.0.1"
 hpdeport=8001
 
 # Set Global variable for Viper confifuration file - change the folder path for your computer
-viperconfigfile="C:/maads/golang/go/bin/viper.env"
+viperconfigfile="C:/viperdemo/viper.env"
 
 #############################################################################################################
 #                                      STORE VIPER TOKEN
@@ -69,13 +69,7 @@ def streamstocheckforanomalies(bankaccount):
 # influence=A number between 0-1, where 1=normal inflence and 0.5 is half
 
 def genflagstraining(allstreams,stringthreshnumber=0.1,numericthreshnumber=0.1,lag=5,zthresh=2.5,influence=0.5):
-
- #flags="""topic=viperdependentvariable,topictype=numeric,threshnumber=300,lag=5,zthresh=2.5,
-  #    influence=0.5~topic=viperindependentvariable1,topictype=numeric,threshnumber=300,lag=5,zthresh=2.5,
-   #   influence=0.5~topic=viperindependentvariable2,topictype=numeric,threshnumber=300,lag=5,zthresh=2.5,
-    #  influence=0.9~topic=textdata1,topictype=string,threshnumber=10~topic=textdata2,topictype=string,
-     # threshnumber=.80"""
-       
+      
     buf=""
     streamflags=""
     
@@ -108,12 +102,6 @@ def genflagstraining(allstreams,stringthreshnumber=0.1,numericthreshnumber=0.1,l
 #                 if and, then both must trigger the flag  
 def genflagsprediction(allstreams,overallriskscore,completeandor,numvaluetype,numericlogictype,stringvaluetype,stringlogictype,
              numericscore,stringscore,stringcontains):
-
-#    flags="""flags=riskscore=.4~complete=or~type=or,topic=viperdependentvariable,topictype=numeric,
- #     sc>500~type=and,topic=viperindependentvariable1,topictype=numeric,v1<100,sc>100~
-  #    type=or,topic=textdata1,topictype=string,stringcontains=1,v2=valueany,sc>.6~type=or,
-   #   topic=textdata2,topictype=string,stringcontains=0,v2=Failed Record^Failed Record^test record,
-    #  sc>.210~type=or,topic=viperindependentvariable2,topictype=numeric,v1<100,sc>1000"""
 
     streamflags="flags=riskscore=%.2f~complete=%s~" % (overallriskscore,completeandor)
        
