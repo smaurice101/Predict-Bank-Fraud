@@ -412,7 +412,8 @@ def performAnomalyDetection(streamstojoin,flagstraining,flagsprediction,bankacco
       result=maadstml.vipersubscribeconsumer(VIPERTOKEN,VIPERHOST,VIPERPORT,produceto,companyname,
                                           myname,myemail,mylocation,description,
                                           brokerhost,brokerport,groupid,microserviceid)
-      print(result)
+                                          
+      print("CONSUMER ID FOR TOPIC=otics-tmlbook-anomalydataresults - use for visualization", result)
       # Load the JSON and extract the consumer id
       try:
         y = json.loads(result,strict='False')
