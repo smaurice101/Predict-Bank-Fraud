@@ -13,6 +13,36 @@ Pre-requisites:
 # Toronto, Ontario Canada
 # For help email: support@otics.ca 
 
+#######################################################################################################################################
+
+# This file will produce data to a Kafka cluster for Bank Fraud Detection.  Before using this code you MUST have:
+
+# 1) Downloaded and installed MAADS-VIPER and MAADS-HPDE: from: https://github.com/smaurice101/transactionalmachinelearning
+
+# 2) You have:
+#    a) VIPER listening for a connection on port IP: http://127.0.01 and PORT: 8000 (you can specify different IP and PORT
+#    just change the  VIPERHOST="http://127.0.0.1" and VIPERPORT=8000)
+
+#    b) HPDE listening for a connection on port IP: http://127.0.01 and PORT: 8001 (you can specify different IP and PORT
+#    just change the  hpdehost="http://127.0.0.1" and hpdeport=8001)                                                                                      
+                                                                                      
+# 3) You have created a KAfka cluster in Confluent Cloud (https://confluent.cloud/)
+
+# 4) You have updated the VIPER.ENV file in the following fields:
+# a) KAFKA_CONNECT_BOOTSTRAP_SERVERS=[Enter the bootstrap server - this is the Kafka broker(s) - separate multiple brokers by a comma]
+# b) KAFKA_ROOT=kafka
+# c) SSL_CLIENT_CERT_FILE=[Enter the full path to client.cer.pem]
+# d) SSL_CLIENT_KEY_FILE=[Enter the full path to client.key.pem]
+# e) SSL_SERVER_CERT_FILE=[Enter the full path to server.cer.pem]
+
+# f) CLOUD_USERNAME=[Enter the Cloud Username- this is the KEY]
+# g) CLOUD_PASSWORD=[Enter the Cloud Password - this is the secret]
+
+# NOTE: IF YOU GET STUCK WATCH THE YOUTUBE VIDEO: https://www.youtube.com/watch?v=b1fuIeC7d-8
+# Or email support@otics.ca
+#########################################################################################################################################
+
+
 # import Python Libraries
 import maadstml
 # Uncomment IF using jupyter notebook
@@ -79,6 +109,12 @@ def streamstocheckforanomalies(bankaccount):
 # influence=A number between 0-1, where 1=normal inflence and 0.5 is half
 
 def genflagstraining(allstreams,stringthreshnumber=0.1,numericthreshnumber=0.1,lag=5,zthresh=2.5,influence=0.5):
+
+ #flags="""topic=viperdependentvariable,topictype=numeric,threshnumber=300,lag=5,zthresh=2.5,
+  #    influence=0.5~topic=viperindependentvariable1,topictype=numeric,threshnumber=300,lag=5,zthresh=2.5,
+   #   influence=0.5~topic=viperindependentvariable2,topictype=numeric,threshnumber=300,lag=5,zthresh=2.5,
+    #  influence=0.9~topic=textdata1,topictype=string,threshnumber=10~topic=textdata2,topictype=string,
+     # threshnumber=.80"""
        
     buf=""
     streamflags=""
@@ -112,6 +148,12 @@ def genflagstraining(allstreams,stringthreshnumber=0.1,numericthreshnumber=0.1,l
 #                 if and, then both must trigger the flag  
 def genflagsprediction(allstreams,overallriskscore,completeandor,numvaluetype,numericlogictype,stringvaluetype,stringlogictype,
              numericscore,stringscore,stringcontains):
+
+#    flags="""flags=riskscore=.4~complete=or~type=or,topic=viperdependentvariable,topictype=numeric,
+ #     sc>500~type=and,topic=viperindependentvariable1,topictype=numeric,v1<100,sc>100~
+  #    type=or,topic=textdata1,topictype=string,stringcontains=1,v2=valueany,sc>.6~type=or,
+   #   topic=textdata2,topictype=string,stringcontains=0,v2=Failed Record^Failed Record^test record,
+    #  sc>.210~type=or,topic=viperindependentvariable2,topictype=numeric,v1<100,sc>1000"""
 
     streamflags="flags=riskscore=%.2f~complete=%s~" % (overallriskscore,completeandor)
        
@@ -400,7 +442,7 @@ def performAnomalyDetection(streamstojoin,flagstraining,flagsprediction,bankacco
       result=maadstml.vipersubscribeconsumer(VIPERTOKEN,VIPERHOST,VIPERPORT,produceto,companyname,
                                           myname,myemail,mylocation,description,
                                           brokerhost,brokerport,groupid,microserviceid)
-                                          
+      
       print("CONSUMER ID FOR TOPIC=otics-tmlbook-anomalydataresults - use for visualization", result)
       # Load the JSON and extract the consumer id
       try:
@@ -586,7 +628,6 @@ def checkaccounts(k):
      except Exception as e:
        pass   
 
-# change this to any number
 
 errors=0
 good=0
