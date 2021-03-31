@@ -237,7 +237,7 @@ def performAnomalyDetection(streamstojoin,flagstraining,flagsprediction,bankacco
                                               brokerport,microserviceid)
 
     
-      
+      #print(result)
       # You can print the data - but it could be large amount of data 
       # The function returns a JSON object - you can load it in a Python variable
       # and store in the variable of your choosing - I chose Y
@@ -246,14 +246,8 @@ def performAnomalyDetection(streamstojoin,flagstraining,flagsprediction,bankacco
       except Exception as e:
         y = json.loads(result)
 
-      # Get the partition by iterating through the JSON groups
-      for elements in y:
-        try:
-          if 'Partition' in elements:
-             inputstream_partition=elements['Partition'] 
-        except Exception as e:
-          continue
-
+      inputstream_partition=y['Partition']
+      
       #############################################################################################################
       #                                     SETUP TOPICS FOR PEER GROUP ANALYSIS
 
@@ -633,14 +627,16 @@ errors=0
 good=0
 
 # Checking 50 Bank account
-numberofbankaccounts=50
+numberofbankaccounts=5
 
 # Keep checking 10,000 times - you can change this to any number or infinite loop
 numanomalyruns=10000
-    
+
 cpus=multiprocessing.cpu_count()
 for j in range(numanomalyruns):
     element_run = Parallel(n_jobs=cpus)(delayed(checkaccounts)(k) for k in range(numberofbankaccounts))  
+
+       
 
        
 ```
